@@ -32,9 +32,11 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Image
-          src="https://carzillauae.com/wp-content/uploads/2023/08/logocarz.png"
+          src="/logocarz.png"
           alt="Your Company"
           className="mx-auto h-10 w-auto"
+          width={100}
+          height={40}
         />
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
           Sign in to your account
