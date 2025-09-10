@@ -1,6 +1,7 @@
 import { connectDB } from "../../../libs/db";
 import bcrypt from "bcryptjs";
 import { NextRequest } from "next/server";
+import jwt from "jsonwebtoken"
 
 export type User = {
   id: number;
@@ -28,8 +29,28 @@ export async function POST(req: NextRequest) {
     if (!isPasswordValid) {
       return new Response(JSON.stringify({ error: "Invalid password" }), { status: 401 });
     }
+console.log(user);
 
-    return new Response(JSON.stringify({ message: "Login successful", userId: user.id }), { status: 200 });
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "1h" }
+    );
+
+    // ✅ Set cookie
+    const response = new Response(
+      JSON.stringify({ message: "Login successful" }),
+      { status: 200 }
+    );
+
+    response.headers.append(
+      "Set-Cookie",
+      `token=${token}; HttpOnly; Path=/; Max-Age=3600; SameSite=Strict; Secure`
+    );
+
+    return response;
+
+    // return new Response(JSON.stringify({ message: "Login successful", userId: user.id }), { status: 200 });
   } catch (err) {
     console.error("Login error:", err);
     return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
